@@ -3,12 +3,19 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>AI Infra Hub - AI 基础设施行业情报日报平台</title>
-  <meta name="description" content="面向 AI 从业者、投资人和企业决策者的专业日报平台，每日汇总技术、市场、产品三个维度的 AI 行业动态">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <title>AI Infra Hub - AI 基础设施行业情报平台</title>
+  <meta name="description" content="专业的 AI 行业情报日报平台，每日汇总技术、市场、产品动态">
   <style>
+    :root {
+      --primary: #0066ff;
+      --primary-dark: #0052cc;
+      --text: #1a1a1a;
+      --text-secondary: #666;
+      --bg: #ffffff;
+      --bg-secondary: #f5f7fa;
+      --border: #e1e4e8;
+    }
+
     * {
       margin: 0;
       padding: 0;
@@ -16,62 +23,91 @@
     }
 
     body {
-      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
       line-height: 1.6;
-      color: #1a1a1a;
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      min-height: 100vh;
+      color: var(--text);
+      background: var(--bg);
     }
 
     .container {
       max-width: 1200px;
       margin: 0 auto;
-      padding: 0 20px;
+      padding: 0 24px;
     }
 
-    /* Hero Section */
+    /* Header */
+    header {
+      border-bottom: 1px solid var(--border);
+      padding: 20px 0;
+      position: sticky;
+      top: 0;
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      z-index: 100;
+    }
+
+    header .container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .logo {
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: var(--text);
+      text-decoration: none;
+    }
+
+    .logo span {
+      color: var(--primary);
+    }
+
+    nav a {
+      margin-left: 32px;
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-size: 0.95rem;
+      transition: color 0.2s;
+    }
+
+    nav a:hover {
+      color: var(--primary);
+    }
+
+    /* Hero */
     .hero {
       padding: 120px 0 80px;
-      text-align: center;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
       color: white;
     }
 
     .hero h1 {
-      font-size: 3.5rem;
+      font-size: 3rem;
       font-weight: 700;
-      margin-bottom: 20px;
+      margin-bottom: 16px;
       line-height: 1.2;
     }
 
-    .hero .subtitle {
-      font-size: 1.5rem;
-      font-weight: 300;
-      margin-bottom: 40px;
+    .hero p {
+      font-size: 1.25rem;
       opacity: 0.95;
+      max-width: 700px;
+      margin-bottom: 40px;
     }
 
-    .hero .description {
-      font-size: 1.1rem;
-      max-width: 800px;
-      margin: 0 auto 60px;
-      opacity: 0.9;
-      line-height: 1.8;
-    }
-
-    .cta-buttons {
+    .hero-buttons {
       display: flex;
-      gap: 20px;
-      justify-content: center;
-      flex-wrap: wrap;
+      gap: 16px;
     }
 
     .btn {
-      padding: 16px 32px;
+      padding: 14px 28px;
       border-radius: 8px;
-      font-size: 1.1rem;
-      font-weight: 600;
+      font-size: 1rem;
+      font-weight: 500;
       text-decoration: none;
-      transition: all 0.3s ease;
+      transition: all 0.2s;
       display: inline-flex;
       align-items: center;
       gap: 8px;
@@ -79,194 +115,185 @@
 
     .btn-primary {
       background: white;
-      color: #667eea;
-      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+      color: var(--primary);
     }
 
     .btn-primary:hover {
       transform: translateY(-2px);
-      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
     }
 
-    .btn-secondary {
-      background: rgba(255, 255, 255, 0.2);
+    .btn-outline {
+      background: rgba(255, 255, 255, 0.1);
       color: white;
       border: 2px solid rgba(255, 255, 255, 0.5);
-      backdrop-filter: blur(10px);
     }
 
-    .btn-secondary:hover {
-      background: rgba(255, 255, 255, 0.3);
-      border-color: white;
+    .btn-outline:hover {
+      background: rgba(255, 255, 255, 0.2);
     }
 
-    /* Features Section */
-    .features {
-      background: white;
-      padding: 100px 0;
+    /* Section */
+    section {
+      padding: 80px 0;
     }
 
     .section-title {
+      font-size: 2rem;
+      font-weight: 600;
+      margin-bottom: 16px;
       text-align: center;
-      font-size: 2.5rem;
-      font-weight: 700;
-      margin-bottom: 20px;
-      color: #1a1a1a;
     }
 
     .section-subtitle {
+      font-size: 1.1rem;
+      color: var(--text-secondary);
       text-align: center;
-      font-size: 1.2rem;
-      color: #666;
       margin-bottom: 60px;
       max-width: 600px;
       margin-left: auto;
       margin-right: auto;
     }
 
+    /* Features */
+    .features {
+      background: var(--bg-secondary);
+    }
+
     .feature-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-      gap: 40px;
-      margin-top: 60px;
+      gap: 32px;
     }
 
     .feature-card {
-      padding: 40px;
-      background: #f8f9fa;
-      border-radius: 16px;
-      transition: all 0.3s ease;
-      border: 2px solid transparent;
+      padding: 32px;
+      background: white;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      transition: all 0.2s;
     }
 
     .feature-card:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-      border-color: #667eea;
+      border-color: var(--primary);
+      transform: translateY(-4px);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
     }
 
     .feature-icon {
-      font-size: 3rem;
+      font-size: 2.5rem;
       margin-bottom: 20px;
     }
 
     .feature-card h3 {
-      font-size: 1.5rem;
-      margin-bottom: 15px;
-      color: #1a1a1a;
+      font-size: 1.25rem;
+      margin-bottom: 12px;
     }
 
     .feature-card p {
-      color: #666;
-      line-height: 1.8;
+      color: var(--text-secondary);
+      line-height: 1.7;
+    }
+
+    /* Architecture */
+    .architecture {
+      background: white;
+    }
+
+    .architecture-diagram {
+      background: var(--bg-secondary);
+      border-radius: 12px;
+      padding: 40px;
+      margin-top: 40px;
+      border: 1px solid var(--border);
+    }
+
+    .arch-layer {
+      margin-bottom: 24px;
+    }
+
+    .arch-layer-title {
+      font-size: 1.1rem;
+      font-weight: 600;
+      margin-bottom: 16px;
+      color: var(--primary);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .arch-layer-title::before {
+      content: '';
+      width: 4px;
+      height: 20px;
+      background: var(--primary);
+      border-radius: 2px;
+    }
+
+    .arch-components {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 12px;
+      padding-left: 12px;
+    }
+
+    .arch-component {
+      padding: 12px 16px;
+      background: white;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      font-size: 0.9rem;
+      text-align: center;
+    }
+
+    .arch-component.primary {
+      border-color: var(--primary);
+      background: rgba(0, 102, 255, 0.05);
+    }
+
+    .arch-note {
+      margin-top: 24px;
+      padding: 16px;
+      background: #fff9e6;
+      border-left: 4px solid #f0b90b;
+      border-radius: 4px;
+      font-size: 0.9rem;
+      color: var(--text-secondary);
     }
 
     /* Tech Stack */
     .tech-stack {
-      background: #f8f9fa;
-      padding: 100px 0;
+      background: var(--bg-secondary);
     }
 
     .tech-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 30px;
-      margin-top: 60px;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 24px;
     }
 
     .tech-item {
       text-align: center;
-      padding: 30px;
+      padding: 24px;
       background: white;
       border-radius: 12px;
-      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-      transition: all 0.3s ease;
-    }
-
-    .tech-item:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+      border: 1px solid var(--border);
     }
 
     .tech-item h4 {
-      font-size: 1.2rem;
-      margin-bottom: 10px;
-      color: #667eea;
+      font-size: 1rem;
+      margin-bottom: 8px;
+      color: var(--primary);
     }
 
     .tech-item p {
-      color: #666;
-      font-size: 0.95rem;
+      font-size: 0.85rem;
+      color: var(--text-secondary);
     }
 
-    /* Demo Section */
-    .demo {
-      background: white;
-      padding: 100px 0;
-    }
-
-    .demo-content {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 60px;
-      align-items: center;
-      margin-top: 60px;
-    }
-
-    .demo-text h3 {
-      font-size: 2rem;
-      margin-bottom: 20px;
-      color: #1a1a1a;
-    }
-
-    .demo-text p {
-      color: #666;
-      font-size: 1.1rem;
-      line-height: 1.8;
-      margin-bottom: 30px;
-    }
-
-    .demo-list {
-      list-style: none;
-      margin-bottom: 30px;
-    }
-
-    .demo-list li {
-      padding: 10px 0;
-      padding-left: 30px;
-      position: relative;
-      color: #666;
-    }
-
-    .demo-list li:before {
-      content: "✓";
-      position: absolute;
-      left: 0;
-      color: #10b981;
-      font-weight: bold;
-    }
-
-    .demo-image {
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      border-radius: 16px;
-      padding: 40px;
-      color: white;
-      box-shadow: 0 10px 40px rgba(102, 126, 234, 0.3);
-    }
-
-    .demo-image pre {
-      background: rgba(0, 0, 0, 0.2);
-      padding: 20px;
-      border-radius: 8px;
-      overflow-x: auto;
-      font-size: 0.9rem;
-      line-height: 1.6;
-    }
-
-    /* Stats Section */
+    /* Stats */
     .stats {
       background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      padding: 80px 0;
       color: white;
     }
 
@@ -277,146 +304,123 @@
       text-align: center;
     }
 
-    .stat-item h3 {
+    .stat-number {
       font-size: 3rem;
       font-weight: 700;
-      margin-bottom: 10px;
+      margin-bottom: 8px;
     }
 
-    .stat-item p {
-      font-size: 1.1rem;
+    .stat-label {
+      font-size: 1rem;
       opacity: 0.9;
     }
 
-    /* CTA Section */
+    /* CTA */
     .cta {
-      background: #f8f9fa;
-      padding: 100px 0;
       text-align: center;
     }
 
-    .cta h2 {
-      font-size: 2.5rem;
-      margin-bottom: 20px;
-      color: #1a1a1a;
-    }
-
-    .cta p {
-      font-size: 1.2rem;
-      color: #666;
-      margin-bottom: 40px;
-      max-width: 600px;
-      margin-left: auto;
-      margin-right: auto;
+    .cta-buttons {
+      display: flex;
+      gap: 16px;
+      justify-content: center;
+      flex-wrap: wrap;
     }
 
     /* Footer */
     footer {
-      background: #1a1a1a;
-      color: white;
+      background: var(--bg-secondary);
+      border-top: 1px solid var(--border);
       padding: 60px 0 40px;
     }
 
-    .footer-content {
+    .footer-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
       gap: 40px;
       margin-bottom: 40px;
     }
 
     .footer-section h4 {
-      font-size: 1.2rem;
-      margin-bottom: 20px;
-      color: white;
+      font-size: 1rem;
+      margin-bottom: 16px;
     }
 
-    .footer-section p,
     .footer-section a {
-      color: #999;
-      line-height: 1.8;
-      text-decoration: none;
       display: block;
-      margin-bottom: 10px;
+      color: var(--text-secondary);
+      text-decoration: none;
+      margin-bottom: 12px;
+      font-size: 0.95rem;
     }
 
     .footer-section a:hover {
-      color: white;
+      color: var(--primary);
     }
 
     .footer-bottom {
       text-align: center;
       padding-top: 40px;
-      border-top: 1px solid #333;
-      color: #666;
+      border-top: 1px solid var(--border);
+      color: var(--text-secondary);
+      font-size: 0.9rem;
     }
 
     /* Responsive */
     @media (max-width: 768px) {
-      .hero {
-        padding: 80px 0 60px;
-      }
-
       .hero h1 {
-        font-size: 2.5rem;
-      }
-
-      .hero .subtitle {
-        font-size: 1.2rem;
-      }
-
-      .section-title {
         font-size: 2rem;
       }
 
-      .demo-content {
-        grid-template-columns: 1fr;
+      .hero p {
+        font-size: 1rem;
       }
 
-      .cta-buttons {
+      .hero-buttons {
         flex-direction: column;
-        align-items: center;
       }
-    }
 
-    /* Animation */
-    @keyframes fadeInUp {
-      from {
-        opacity: 0;
-        transform: translateY(30px);
+      nav a {
+        margin-left: 16px;
       }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
 
-    .animate {
-      animation: fadeInUp 0.6s ease-out;
+      .section-title {
+        font-size: 1.5rem;
+      }
     }
   </style>
 </head>
 <body>
-  <!-- Hero Section -->
+  <!-- Header -->
+  <header>
+    <div class="container">
+      <a href="/" class="logo">AI Infra <span>Hub</span></a>
+      <nav>
+        <a href="#features">功能</a>
+        <a href="#architecture">架构</a>
+        <a href="#tech-stack">技术栈</a>
+        <a href="https://github.com/xincxiong/AI-Infra-Hub" target="_blank">GitHub</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Hero -->
   <section class="hero">
     <div class="container">
-      <h1 class="animate">AI Infra Hub</h1>
-      <p class="subtitle animate">AI 基础设施行业情报日报平台</p>
-      <p class="description animate">
-        面向 AI 从业者、投资人和企业决策者的专业日报平台，每日汇总技术、市场、产品三个维度的 AI 行业动态。
-        通过 Joker AI 智能问答助手，让您深度理解每一条行业资讯。
-      </p>
-      <div class="cta-buttons animate">
+      <h1>AI 基础设施行业情报平台</h1>
+      <p>面向 AI 从业者、投资人和企业决策者的专业日报平台，每日汇总技术、市场、产品三个维度的 AI 行业动态</p>
+      <div class="hero-buttons">
         <a href="https://github.com/xincxiong/AI-Infra-Hub" class="btn btn-primary" target="_blank">
-          🚀 访问 GitHub 仓库
+          🚀 访问 GitHub
         </a>
-        <a href="#features" class="btn btn-secondary">
-          📋 了解功能
+        <a href="#architecture" class="btn btn-outline">
+          📐 查看架构
         </a>
       </div>
     </div>
   </section>
 
-  <!-- Features Section -->
+  <!-- Features -->
   <section class="features" id="features">
     <div class="container">
       <h2 class="section-title">核心功能</h2>
@@ -426,44 +430,130 @@
         <div class="feature-card">
           <div class="feature-icon">📊</div>
           <h3>三种日报类型</h3>
-          <p>市场动态、技术动态、产品动态，每日自动采集生成，覆盖 AI 行业全维度资讯。</p>
+          <p>市场动态、技术动态、产品动态，每日自动采集生成，覆盖 AI 行业全维度资讯</p>
         </div>
 
         <div class="feature-card">
           <div class="feature-icon">🤖</div>
           <h3>Joker AI 智能问答</h3>
-          <p>选中文字即问即答，AI 智能摘要生成，深度分析，多轮对话，引用来源追溯。</p>
+          <p>选中文字即问即答，AI 智能摘要生成，深度分析，多轮对话，引用来源追溯</p>
         </div>
 
         <div class="feature-card">
           <div class="feature-icon">⚡</div>
           <h3>智能数据采集</h3>
-          <p>集成 Tavily API 和阿里云百炼，自动搜索 AI 行业最新资讯，智能去重和分类。</p>
+          <p>集成 Tavily API 和阿里云百炼，自动搜索 AI 行业最新资讯，智能去重和分类</p>
         </div>
 
         <div class="feature-card">
           <div class="feature-icon">🕐</div>
           <h3>定时任务</h3>
-          <p>每日凌晨 3 点自动采集数据并生成日报，无需手动操作，情报自动送达。</p>
+          <p>每日凌晨 3 点自动采集数据并生成日报，无需手动操作，情报自动送达</p>
         </div>
 
         <div class="feature-card">
           <div class="feature-icon">👤</div>
           <h3>用户认证系统</h3>
-          <p>支持 Google 和 GitHub 登录，个性化管理，使用量统计，额度管理。</p>
+          <p>支持 Google 和 GitHub 登录，个性化管理，使用量统计，额度管理</p>
         </div>
 
         <div class="feature-card">
           <div class="feature-icon">📈</div>
           <h3>业务洞察</h3>
-          <p>基于情报生成业务建议和影响分析，帮助您做出更明智的决策。</p>
+          <p>基于情报生成业务建议和影响分析，帮助您做出更明智的决策</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Architecture -->
+  <section class="architecture" id="architecture">
+    <div class="container">
+      <h2 class="section-title">系统架构</h2>
+      <p class="section-subtitle">分层架构设计，确保系统的可扩展性和可维护性</p>
+      
+      <div class="architecture-diagram">
+        <!-- Layer 1: 前端应用层 -->
+        <div class="arch-layer">
+          <div class="arch-layer-title">前端应用层 (Frontend Application Layer)</div>
+          <div class="arch-components">
+            <div class="arch-component primary">Next.js 14 App Router</div>
+            <div class="arch-component">React Components</div>
+            <div class="arch-component">Tailwind CSS</div>
+            <div class="arch-component">Framer Motion</div>
+          </div>
+        </div>
+
+        <!-- Layer 2: API 应用层 -->
+        <div class="arch-layer">
+          <div class="arch-layer-title">API 应用层 (API Application Layer)</div>
+          <div class="arch-components">
+            <div class="arch-component primary">/api/ask-ai</div>
+            <div class="arch-component primary">/api/reports</div>
+            <div class="arch-component primary">/api/cron/daily-report</div>
+            <div class="arch-component">/api/auth</div>
+            <div class="arch-component">/api/credits</div>
+            <div class="arch-component">/api/users/stats</div>
+          </div>
+        </div>
+
+        <!-- Layer 3: 业务逻辑层 -->
+        <div class="arch-layer">
+          <div class="arch-layer-title">业务逻辑层 (Business Logic Layer)</div>
+          <div class="arch-components">
+            <div class="arch-component primary">AskAIService</div>
+            <div class="arch-component primary">ReportService</div>
+            <div class="arch-component primary">CrawlerService</div>
+            <div class="arch-component">Auth Service</div>
+            <div class="arch-component">Credit Management</div>
+          </div>
+        </div>
+
+        <!-- Layer 4: LLM 引擎层 -->
+        <div class="arch-layer">
+          <div class="arch-layer-title">LLM 引擎层 (LLM Engine Layer)</div>
+          <div class="arch-components">
+            <div class="arch-component primary">LLM Router (智能路由)</div>
+            <div class="arch-component">LLM Client</div>
+            <div class="arch-component">Prompt Engineering</div>
+            <div class="arch-component">Fallback Strategy</div>
+          </div>
+        </div>
+
+        <!-- Layer 5: 数据存储层 -->
+        <div class="arch-layer">
+          <div class="arch-layer-title">数据存储层 (Data Storage Layer)</div>
+          <div class="arch-components">
+            <div class="arch-component primary">Supabase PostgreSQL</div>
+            <div class="arch-component primary">Upstash Redis</div>
+            <div class="arch-component">daily_reports 表</div>
+            <div class="arch-component">raw_articles 表</div>
+            <div class="arch-component">ask_ai_sessions 表</div>
+            <div class="arch-component">users 表</div>
+          </div>
+        </div>
+
+        <!-- Layer 6: 外部服务层 -->
+        <div class="arch-layer">
+          <div class="arch-layer-title">外部服务层 (External Services Layer)</div>
+          <div class="arch-components">
+            <div class="arch-component">阿里云百炼 API</div>
+            <div class="arch-component">Tavily API</div>
+            <div class="arch-component">Google OAuth</div>
+            <div class="arch-component">GitHub OAuth</div>
+          </div>
+        </div>
+
+        <div class="arch-note">
+          <strong>架构特点：</strong>
+          分层解耦设计，各层职责清晰。API 层负责请求处理和响应格式化，业务层实现核心逻辑，LLM 层提供统一的 AI 能力，数据层负责持久化和缓存。支持水平扩展和独立部署。
         </div>
       </div>
     </div>
   </section>
 
   <!-- Tech Stack -->
-  <section class="tech-stack">
+  <section class="tech-stack" id="tech-stack">
     <div class="container">
       <h2 class="section-title">技术栈</h2>
       <p class="section-subtitle">采用业界领先的技术方案，确保性能和可扩展性</p>
@@ -505,82 +595,40 @@
     </div>
   </section>
 
-  <!-- Demo Section -->
-  <section class="demo">
-    <div class="container">
-      <div class="demo-content">
-        <div class="demo-text">
-          <h3>Joker AI 智能问答</h3>
-          <p>
-            在阅读日报时，只需选中感兴趣的文字，点击"问问 AI"，即可获得专业的解读和分析。
-            支持多种问答模式，满足不同深度的需求。
-          </p>
-          <ul class="demo-list">
-            <li>AI 智能摘要 - 快速了解核心内容</li>
-            <li>深度分析 - 背景、影响、趋势、建议</li>
-            <li>关联搜索 - 查找更多相关信息</li>
-            <li>要点总结 - 结构化呈现关键信息</li>
-            <li>多轮对话 - 持续深入探讨</li>
-            <li>引用来源 - 可追溯信息来源</li>
-          </ul>
-          <a href="https://github.com/xincxiong/AI-Infra-Hub" class="btn btn-primary" target="_blank">
-            查看演示 →
-          </a>
-        </div>
-        <div class="demo-image">
-          <pre>// API 调用示例
-POST /api/ask-ai
-
-{
-  "reportId": "daily-report-001",
-  "selectedText": "OpenAI 发布 GPT-4 Turbo",
-  "question": "这个产品有什么创新？",
-  "mode": "deep"
-}
-
-// 流式响应
-data: {"chunk": "GPT-4 Turbo 在以下方面..."}
-data: {"chunk": "首先，上下文窗口..."}
-data: {"type": "complete"}</pre>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Stats Section -->
+  <!-- Stats -->
   <section class="stats">
     <div class="container">
       <div class="stats-grid">
         <div class="stat-item">
-          <h3>3+</h3>
-          <p>日报类型</p>
+          <div class="stat-number">3+</div>
+          <div class="stat-label">日报类型</div>
         </div>
         <div class="stat-item">
-          <h3>100+</h3>
-          <p>数据源覆盖</p>
+          <div class="stat-number">100+</div>
+          <div class="stat-label">数据源覆盖</div>
         </div>
         <div class="stat-item">
-          <h3>24h</h3>
-          <p>自动更新</p>
+          <div class="stat-number">24h</div>
+          <div class="stat-label">自动更新</div>
         </div>
         <div class="stat-item">
-          <h3>~¥100</h3>
-          <p>月度成本</p>
+          <div class="stat-number">~¥100</div>
+          <div class="stat-label">月度成本</div>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- CTA Section -->
+  <!-- CTA -->
   <section class="cta">
     <div class="container">
-      <h2>开始使用 AI Infra Hub</h2>
-      <p>立即部署，打造您的 AI 行业情报平台</p>
+      <h2 class="section-title">开始使用</h2>
+      <p class="section-subtitle">立即部署，打造您的 AI 行业情报平台</p>
       <div class="cta-buttons">
         <a href="https://github.com/xincxiong/AI-Infra-Hub" class="btn btn-primary" target="_blank">
           ⭐ Star on GitHub
         </a>
-        <a href="https://vercel.com/new" class="btn btn-secondary" target="_blank">
+        <a href="https://vercel.com/new" class="btn btn-outline" target="_blank" style="border-color: var(--primary); color: var(--primary);">
           🚀 一键部署到 Vercel
         </a>
       </div>
@@ -590,26 +638,28 @@ data: {"type": "complete"}</pre>
   <!-- Footer -->
   <footer>
     <div class="container">
-      <div class="footer-content">
+      <div class="footer-grid">
         <div class="footer-section">
           <h4>AI Infra Hub</h4>
-          <p>AI 基础设施行业情报日报平台</p>
-          <p>让情报获取更简单</p>
+          <p style="color: var(--text-secondary); font-size: 0.95rem; line-height: 1.7;">
+            AI 基础设施行业情报日报平台<br>
+            让情报获取更简单
+          </p>
         </div>
         <div class="footer-section">
-          <h4>快速链接</h4>
+          <h4>文档</h4>
+          <a href="https://github.com/xincxiong/AI-Infra-Hub/blob/main/ai-infra-hub/DEPLOYMENT.md" target="_blank">部署指南</a>
+          <a href="https://github.com/xincxiong/AI-Infra-Hub/blob/main/ai-infra-hub/README.md" target="_blank">项目文档</a>
           <a href="https://github.com/xincxiong/AI-Infra-Hub" target="_blank">GitHub 仓库</a>
-          <a href="https://github.com/xincxiong/AI-Infra-Hub/blob/main/ai-infra-hub/DEPLOYMENT.md" target="_blank">部署文档</a>
-          <a href="https://github.com/xincxiong/AI-Infra-Hub/blob/main/README.md" target="_blank">项目文档</a>
         </div>
         <div class="footer-section">
           <h4>技术栈</h4>
-          <a href="https://nextjs.org/" target="_blank">Next.js 14</a>
+          <a href="https://nextjs.org/" target="_blank">Next.js</a>
           <a href="https://supabase.com/" target="_blank">Supabase</a>
           <a href="https://vercel.com/" target="_blank">Vercel</a>
         </div>
         <div class="footer-section">
-          <h4>联系方式</h4>
+          <h4>联系</h4>
           <a href="https://github.com/xincxiong" target="_blank">GitHub</a>
           <a href="mailto:contact@ai-infra-hub.com">Email</a>
         </div>
@@ -630,19 +680,6 @@ data: {"type": "complete"}</pre>
           target.scrollIntoView({ behavior: 'smooth' });
         }
       });
-    });
-
-    // Animate on scroll
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('animate');
-        }
-      });
-    }, { threshold: 0.1 });
-
-    document.querySelectorAll('.feature-card, .tech-item, .stat-item').forEach(el => {
-      observer.observe(el);
     });
   </script>
 </body>
