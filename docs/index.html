@@ -78,27 +78,75 @@
     /* Hero */
     .hero {
       padding: 120px 0 80px;
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      background: linear-gradient(135deg, #0066ff 0%, #0052cc 100%);
       color: white;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: 
+        radial-gradient(circle at 20% 50%, rgba(255, 255, 255, 0.1) 0%, transparent 50%),
+        radial-gradient(circle at 80% 80%, rgba(255, 255, 255, 0.08) 0%, transparent 50%);
+      pointer-events: none;
+    }
+
+    .hero-pattern {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      opacity: 0.05;
+      background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+      pointer-events: none;
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 1;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 60px;
+      align-items: center;
     }
 
     .hero h1 {
       font-size: 3rem;
       font-weight: 700;
-      margin-bottom: 16px;
+      margin-bottom: 20px;
       line-height: 1.2;
     }
 
     .hero p {
       font-size: 1.25rem;
       opacity: 0.95;
-      max-width: 700px;
       margin-bottom: 40px;
+      line-height: 1.8;
     }
 
     .hero-buttons {
       display: flex;
       gap: 16px;
+    }
+
+    .hero-visual {
+      position: relative;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .hero-visual svg {
+      width: 100%;
+      max-width: 500px;
+      height: auto;
     }
 
     .btn {
@@ -400,6 +448,24 @@
 
     /* Responsive */
     @media (max-width: 768px) {
+      .hero {
+        padding: 80px 0 60px;
+      }
+
+      .hero-content {
+        grid-template-columns: 1fr;
+        gap: 40px;
+      }
+
+      .hero-visual {
+        order: -1;
+      }
+
+      .hero-visual svg {
+        max-width: 100%;
+        height: auto;
+      }
+
       .hero h1 {
         font-size: 2rem;
       }
@@ -418,6 +484,10 @@
 
       .section-title {
         font-size: 1.5rem;
+      }
+
+      .arch-svg {
+        min-width: 600px;
       }
     }
   </style>
@@ -439,15 +509,85 @@
   <!-- Hero -->
   <section class="hero">
     <div class="container">
-      <h1>AI 基础设施行业情报平台</h1>
-      <p>面向 AI 从业者、投资人和企业决策者的专业日报平台，每日汇总技术、市场、产品三个维度的 AI 行业动态</p>
-      <div class="hero-buttons">
-        <a href="https://github.com/xincxiong/AI-Infra-Hub" class="btn btn-primary" target="_blank">
-          🚀 访问 GitHub
-        </a>
-        <a href="#architecture" class="btn btn-outline">
-          📐 查看架构
-        </a>
+      <div class="hero-content">
+        <div class="hero-text">
+          <h1>AI 基础设施行业情报平台</h1>
+          <p>面向 AI 从业者、投资人和企业决策者的专业日报平台，每日汇总技术、市场、产品三个维度的 AI 行业动态</p>
+          <div class="hero-buttons">
+            <a href="https://github.com/xincxiong/AI-Infra-Hub" class="btn btn-primary" target="_blank">
+              🚀 访问 GitHub
+            </a>
+            <a href="#architecture" class="btn btn-outline">
+              📐 查看架构
+            </a>
+          </div>
+        </div>
+        <div class="hero-visual">
+          <svg viewBox="0 0 500 400" xmlns="http://www.w3.org/2000/svg">
+            <!-- Background layers -->
+            <defs>
+              <linearGradient id="heroGrad1" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" style="stop-color:rgba(255,255,255,0.3);stop-opacity:1" />
+                <stop offset="100%" style="stop-color:rgba(255,255,255,0.1);stop-opacity:1" />
+              </linearGradient>
+              <linearGradient id="heroGrad2" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" style="stop-color:rgba(255,255,255,0.2);stop-opacity:1" />
+                <stop offset="100%" style="stop-color:rgba(255,255,255,0.05);stop-opacity:1" />
+              </linearGradient>
+            </defs>
+            
+            <!-- Layer 1: Database -->
+            <g transform="translate(50, 280)">
+              <rect width="400" height="60" rx="8" fill="url(#heroGrad1)" stroke="rgba(255,255,255,0.4)" stroke-width="2"/>
+              <circle cx="80" cy="30" r="12" fill="white" opacity="0.9"/>
+              <rect x="110" y="20" width="120" height="20" rx="3" fill="white" opacity="0.9"/>
+              <circle cx="320" cy="30" r="12" fill="white" opacity="0.9"/>
+              <rect x="350" y="20" width="30" height="20" rx="3" fill="white" opacity="0.9"/>
+            </g>
+            
+            <!-- Layer 2: Business Logic -->
+            <g transform="translate(50, 200)">
+              <rect width="400" height="60" rx="8" fill="url(#heroGrad2)" stroke="rgba(255,255,255,0.4)" stroke-width="2"/>
+              <rect x="40" y="15" width="80" height="30" rx="4" fill="white" opacity="0.9"/>
+              <rect x="140" y="15" width="80" height="30" rx="4" fill="white" opacity="0.9"/>
+              <rect x="240" y="15" width="100" height="30" rx="4" fill="white" opacity="0.9"/>
+            </g>
+            
+            <!-- Layer 3: API -->
+            <g transform="translate(50, 120)">
+              <rect width="400" height="60" rx="8" fill="url(#heroGrad1)" stroke="rgba(255,255,255,0.4)" stroke-width="2"/>
+              <rect x="30" y="15" width="70" height="30" rx="4" fill="white" opacity="0.9"/>
+              <rect x="120" y="15" width="70" height="30" rx="4" fill="white" opacity="0.9"/>
+              <rect x="210" y="15" width="120" height="30" rx="4" fill="white" opacity="0.9"/>
+              <rect x="350" y="15" width="20" height="30" rx="4" fill="white" opacity="0.9"/>
+            </g>
+            
+            <!-- Layer 4: Frontend -->
+            <g transform="translate(50, 40)">
+              <rect width="400" height="60" rx="8" fill="url(#heroGrad2)" stroke="rgba(255,255,255,0.4)" stroke-width="2"/>
+              <circle cx="80" cy="30" r="15" fill="white" opacity="0.9"/>
+              <rect x="110" y="15" width="100" height="30" rx="4" fill="white" opacity="0.9"/>
+              <rect x="230" y="15" width="80" height="30" rx="4" fill="white" opacity="0.9"/>
+              <rect x="330" y="15" width="120" height="30" rx="4" fill="white" opacity="0.9"/>
+            </g>
+            
+            <!-- Connection lines -->
+            <line x1="250" y1="100" x2="250" y2="120" stroke="rgba(255,255,255,0.3)" stroke-width="2"/>
+            <line x1="250" y1="180" x2="250" y2="200" stroke="rgba(255,255,255,0.3)" stroke-width="2"/>
+            <line x1="250" y1="260" x2="250" y2="280" stroke="rgba(255,255,255,0.3)" stroke-width="2"/>
+            
+            <!-- Floating elements -->
+            <circle cx="450" cy="80" r="8" fill="white" opacity="0.6">
+              <animate attributeName="cy" values="80;70;80" dur="3s" repeatCount="indefinite"/>
+            </circle>
+            <circle cx="470" cy="150" r="6" fill="white" opacity="0.5">
+              <animate attributeName="cy" values="150;140;150" dur="4s" repeatCount="indefinite"/>
+            </circle>
+            <circle cx="460" cy="230" r="7" fill="white" opacity="0.55">
+              <animate attributeName="cy" values="230;220;230" dur="3.5s" repeatCount="indefinite"/>
+            </circle>
+          </svg>
+        </div>
       </div>
     </div>
   </section>
