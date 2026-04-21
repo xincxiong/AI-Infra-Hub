@@ -183,7 +183,12 @@
 
     /* Section */
     section {
-      padding: 80px 0;
+      padding: 100px 0;
+    }
+
+    .section-header {
+      text-align: center;
+      margin-bottom: 60px;
     }
 
     .section-title {
@@ -197,10 +202,75 @@
       font-size: 1.1rem;
       color: var(--text-secondary);
       text-align: center;
-      margin-bottom: 60px;
       max-width: 600px;
-      margin-left: auto;
-      margin-right: auto;
+      margin: 0 auto;
+      line-height: 1.7;
+    }
+
+    .section-divider {
+      width: 60px;
+      height: 4px;
+      background: var(--primary);
+      margin: 24px auto 0;
+      border-radius: 2px;
+    }
+
+    /* Value Proposition */
+    .value-prop {
+      background: white;
+    }
+
+    .value-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 32px;
+      margin-top: 40px;
+    }
+
+    .value-card {
+      padding: 40px;
+      background: var(--bg-secondary);
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      transition: all 0.2s;
+    }
+
+    .value-card:hover {
+      border-color: var(--primary);
+      transform: translateY(-4px);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+    }
+
+    .value-icon {
+      font-size: 3rem;
+      margin-bottom: 20px;
+    }
+
+    .value-card h3 {
+      font-size: 1.25rem;
+      margin-bottom: 20px;
+      color: var(--text);
+    }
+
+    .value-list {
+      list-style: none;
+    }
+
+    .value-list li {
+      padding: 12px 0;
+      padding-left: 28px;
+      position: relative;
+      color: var(--text-secondary);
+      line-height: 1.6;
+    }
+
+    .value-list li:before {
+      content: "✓";
+      position: absolute;
+      left: 0;
+      color: var(--primary);
+      font-weight: bold;
+      font-size: 1.1rem;
     }
 
     /* Features */
@@ -486,6 +556,14 @@
         font-size: 1.5rem;
       }
 
+      .value-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .value-card {
+        padding: 24px;
+      }
+
       .arch-svg {
         min-width: 600px;
       }
@@ -592,11 +670,60 @@
     </div>
   </section>
 
+  <!-- Value Proposition -->
+  <section class="value-prop">
+    <div class="container">
+      <div class="section-header">
+        <h2 class="section-title">为谁创造价值</h2>
+        <p class="section-subtitle">面向 AI 行业的不同角色，提供精准的情报服务</p>
+        <div class="section-divider"></div>
+      </div>
+      
+      <div class="value-grid">
+        <div class="value-card">
+          <div class="value-icon">👨‍💻</div>
+          <h3>AI 从业者</h3>
+          <ul class="value-list">
+            <li>每日技术动态追踪，把握前沿技术趋势</li>
+            <li>竞品分析情报，了解行业动态</li>
+            <li>技术选型参考，避免重复造轮子</li>
+            <li>行业人脉拓展，发现合作机会</li>
+          </ul>
+        </div>
+        
+        <div class="value-card">
+          <div class="value-icon">💼</div>
+          <h3>投资人</h3>
+          <ul class="value-list">
+            <li>赛道趋势分析，发现投资机会</li>
+            <li>标的公司追踪，评估投资价值</li>
+            <li>竞品对比数据，辅助投资决策</li>
+            <li>行业风险预警，规避投资风险</li>
+          </ul>
+        </div>
+        
+        <div class="value-card">
+          <div class="value-icon">🏢</div>
+          <h3>企业决策者</h3>
+          <ul class="value-list">
+            <li>市场格局洞察，制定战略规划</li>
+            <li>竞争对手监控，调整竞争策略</li>
+            <li>技术趋势判断，把握投入方向</li>
+            <li>政策法规追踪，确保合规经营</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <!-- Features -->
   <section class="features" id="features">
     <div class="container">
-      <h2 class="section-title">核心功能</h2>
-      <p class="section-subtitle">全方位 AI 行业情报服务，助您把握行业脉搏</p>
+      <div class="section-header">
+        <h2 class="section-title">核心功能</h2>
+        <p class="section-subtitle">全方位 AI 行业情报服务，助您把握行业脉搏</p>
+        <div class="section-divider"></div>
+      </div>
       
       <div class="feature-grid">
         <div class="feature-card">
@@ -806,8 +933,11 @@
   <!-- Tech Stack -->
   <section class="tech-stack" id="tech-stack">
     <div class="container">
-      <h2 class="section-title">技术栈</h2>
-      <p class="section-subtitle">采用业界领先的技术方案，确保性能和可扩展性</p>
+      <div class="section-header">
+        <h2 class="section-title">技术栈</h2>
+        <p class="section-subtitle">采用业界领先的技术方案，确保性能和可扩展性</p>
+        <div class="section-divider"></div>
+      </div>
       
       <div class="tech-grid">
         <div class="tech-item">
@@ -873,8 +1003,11 @@
   <!-- CTA -->
   <section class="cta">
     <div class="container">
-      <h2 class="section-title">开始使用</h2>
-      <p class="section-subtitle">立即部署，打造您的 AI 行业情报平台</p>
+      <div class="section-header">
+        <h2 class="section-title">开始使用</h2>
+        <p class="section-subtitle">立即部署，打造您的 AI 行业情报平台</p>
+        <div class="section-divider"></div>
+      </div>
       <div class="cta-buttons">
         <a href="https://github.com/xincxiong/AI-Infra-Hub" class="btn btn-primary" target="_blank">
           ⭐ Star on GitHub
@@ -914,9 +1047,17 @@
           <a href="https://github.com/xincxiong" target="_blank">GitHub</a>
           <a href="mailto:contact@ai-infra-hub.com">Email</a>
         </div>
+        <div class="footer-section">
+          <h4>作者</h4>
+          <p style="color: var(--text-secondary); font-size: 0.95rem; line-height: 1.7;">
+            <strong>xincxiong</strong><br>
+            AI Infra Hub 创始人<br>
+            专注 AI 基础设施领域研究
+          </p>
+        </div>
       </div>
       <div class="footer-bottom">
-        <p>&copy; 2026 AI Infra Hub. MIT License.</p>
+        <p>&copy; 2026 AI Infra Hub. MIT License. | Created by <strong>xincxiong</strong></p>
       </div>
     </div>
   </footer>
