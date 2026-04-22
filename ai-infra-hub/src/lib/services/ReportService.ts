@@ -6,6 +6,14 @@ export interface GenerateReportRequest {
   reportType: 'market' | 'tech' | 'product'
 }
 
+export const REPORT_CATEGORIES = {
+  market: ['融资', '产品', '合作', '政策'],
+  tech: ['模型', '工程', '论文'],
+  product: ['云厂商', '模型厂商', '芯片厂商', '创业公司'],
+} as const
+
+export type ReportCategory = typeof REPORT_CATEGORIES[keyof typeof REPORT_CATEGORIES][number]
+
 export class ReportService {
   async generateDraft(request: GenerateReportRequest) {
     const { reportDate, reportType } = request
@@ -23,7 +31,7 @@ export class ReportService {
     const insights = await this.generateInsights(articles)
 
     // 4. 按模块分组
-    const sections = this.groupByModules(articles)
+    const sections = this.groupByModules(articles, reportType)
 
     // 5. 保存日报
     const report = await this.saveReport({
@@ -144,11 +152,17 @@ export class ReportService {
     ]
   }
 
-  private groupByModules(articles: Array<{ id: string; title: string; summary?: string; source: string; url: string; date: string; segment?: string }>) {
+  private groupByModules(articles: Array<{ id: string; title: string; summary?: string; source: string; url: string; date: string; segment?: string; event_type?: string }>, categoryType?: 'market' | 'tech' | 'product') {
+    const categories = categoryType ? REPORT_CATEGORIES[categoryType] : ['其他']
+    
     const modules: Record<string, Array<{ id: string; title: string; summary: string; source: string; url: string; date: string }>> = {}
 
+    categories.forEach(cat => {
+      modules[cat] = []
+    })
+
     articles.forEach((article) => {
-      const moduleName = article.segment || '其他'
+      const moduleName = this.mapToCategory(article.event_type, categoryType) || '其他'
       if (!modules[moduleName]) {
         modules[moduleName] = []
       }
@@ -162,11 +176,41 @@ export class ReportService {
       })
     })
 
-    return Object.entries(modules).map(([name, items]) => ({
-      id: `section-${name}`,
-      name,
-      items,
-    }))
+    return Object.entries(modules)
+      .filter(([, items]) => items.length > 0)
+      .map(([name, items]) => ({
+        id: `section-${name}`,
+        name,
+        items,
+      }))
+  }
+
+  private mapToCategory(eventType?: string, categoryType?: 'market' | 'tech' | 'product'): string {
+    if (!eventType || !categoryType) return '其他'
+    
+    const marketCategoryMap: Record<string, string> = {
+      funding: '融资',
+      product_launch: '产品',
+      partnership: '合作',
+      policy: '政策',
+      acquisition: '合作',
+    }
+    
+    const techCategoryMap: Record<string, string> = {
+      research: '论文',
+      model_release: '模型',
+      engineering: '工程',
+    }
+    
+    const productCategoryMap: Record<string, string> = {
+      cloud: '云厂商',
+      model: '模型厂商',
+      chip: '芯片厂商',
+      startup: '创业公司',
+    }
+
+    const map = categoryType === 'market' ? marketCategoryMap : categoryType === 'tech' ? techCategoryMap : productCategoryMap
+    return map[eventType] || '其他'
   }
 
   private async saveReport(data: {
