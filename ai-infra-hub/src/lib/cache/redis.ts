@@ -1,12 +1,27 @@
 import { Redis } from '@upstash/redis'
 
-const redisUrl = process.env.UPSTASH_REDIS_REST_URL!
-const redisToken = process.env.UPSTASH_REDIS_REST_TOKEN!
+// 懒加载 Redis 客户端（避免构建时初始化）
+let _redis: Redis | null = null
 
-// Redis 客户端实例
-export const redis = new Redis({
-  url: redisUrl,
-  token: redisToken,
+export function getRedis() {
+  if (!_redis) {
+    const redisUrl = process.env.UPSTASH_REDIS_REST_URL!
+    const redisToken = process.env.UPSTASH_REDIS_REST_TOKEN!
+    _redis = new Redis({
+      url: redisUrl,
+      token: redisToken,
+    })
+  }
+  return _redis
+}
+
+// 向后兼容的导出（仅在运行时使用）
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const redis = new Proxy({} as any, {
+  get: (_: any, prop: string) => {
+    const client = getRedis()
+    return (client as any)[prop]
+  },
 })
 
 // 缓存键前缀

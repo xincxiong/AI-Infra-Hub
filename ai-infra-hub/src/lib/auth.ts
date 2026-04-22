@@ -43,6 +43,10 @@ export const authOptions: NextAuthOptions = {
   callbacks: {
     async signIn({ user }) {
       // 用户首次登录时，自动创建用户记录
+      if (!user.email) {
+        return true
+      }
+      
       try {
         const { data: existingUser } = await supabaseAdmin
           .from('users')
@@ -51,8 +55,9 @@ export const authOptions: NextAuthOptions = {
           .single()
 
         if (!existingUser) {
-          await supabaseAdmin.from('users').insert({
-            email: user.email!,
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          await (supabaseAdmin as any).from('users').insert({
+            email: user.email,
             name: user.name,
             avatar_url: user.image,
             role: 'user',

@@ -47,13 +47,15 @@ export class AskAIService {
     if (!report) {
       throw new Error('日报不存在')
     }
+    
+    const reportTyped = report as { title: string; type: string }
 
     // 3. 构建 Prompt
     const prompt = this.buildPrompt({
       selectedText: request.selectedText,
       question: request.question,
-      reportTitle: report.title,
-      reportType: report.type,
+      reportTitle: reportTyped.title,
+      reportType: reportTyped.type,
       mode: request.mode || 'summary',
     })
 
@@ -109,13 +111,15 @@ export class AskAIService {
       yield JSON.stringify({ error: '日报不存在' })
       return
     }
+    
+    const reportTyped = report as { title: string; type: string }
 
     // 构建 Prompt
     const prompt = this.buildPrompt({
       selectedText: request.selectedText,
       question: request.question,
-      reportTitle: report.title,
-      reportType: report.type,
+      reportTitle: reportTyped.title,
+      reportType: reportTyped.type,
       mode: request.mode || 'summary',
     })
 
@@ -261,7 +265,8 @@ export class AskAIService {
     sources: Array<{ title: string; url: string; source: string; relevance: number }>
     relatedItems: Array<{ id: string; title: string; summary: string; relevance: number }>
   }): Promise<string> {
-    const { data: session, error } = await supabaseAdmin
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const { data: session, error } = await (supabaseAdmin as any)
       .from('ask_ai_sessions')
       .insert({
         user_id: data.userId,

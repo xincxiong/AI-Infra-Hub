@@ -158,7 +158,8 @@ export class CrawlerService {
         }
 
         // 插入新文章
-        const { error } = await supabaseAdmin
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const { error } = await (supabaseAdmin as any)
           .from('raw_articles')
           .insert({
             url: result.url,
@@ -190,7 +191,8 @@ export class CrawlerService {
    */
   async generateDailyReport(date: string, type: 'market' | 'tech' | 'product'): Promise<void> {
     // 获取当天的文章
-    const { data: articles } = await supabaseAdmin
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const { data: articles } = await (supabaseAdmin as any)
       .from('raw_articles')
       .select('*')
       .eq('date', date)
@@ -202,7 +204,8 @@ export class CrawlerService {
     }
 
     // 按类型筛选
-    const filteredArticles = articles.filter(article => {
+    const articlesTyped = articles as Array<{ id: string; title: string; summary?: string; source: string; url: string; segment?: string; tags?: string[] }>
+    const filteredArticles = articlesTyped.filter(article => {
       if (type === 'market') return article.segment === 'Market' || article.segment === 'Business'
       if (type === 'tech') return article.segment === 'Technology' || article.segment === 'Research'
       if (type === 'product') return article.segment === 'Product' || article.segment === 'Release'
@@ -388,7 +391,8 @@ export class CrawlerService {
       },
     ]
 
-    const { error } = await supabaseAdmin
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const { error } = await (supabaseAdmin as any)
       .from('daily_reports')
       .insert({
         type,

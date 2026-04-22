@@ -68,7 +68,8 @@ export class ReportService {
   }
 
   async publishReport(reportId: string) {
-    const { data: report, error } = await supabaseAdmin
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const { data: report, error } = await (supabaseAdmin as any)
       .from('daily_reports')
       .update({
         status: 'published',
@@ -180,7 +181,8 @@ export class ReportService {
     status: string
     quality_score: number
   }) {
-    const { data: report, error } = await supabaseAdmin
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const { data: report, error } = await (supabaseAdmin as any)
       .from('daily_reports')
       .insert(data)
       .select()
