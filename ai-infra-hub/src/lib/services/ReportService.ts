@@ -1,5 +1,4 @@
 import { supabaseAdmin } from '../db/supabase'
-import { llmRouter } from '../llm/router/LLMRouter'
 import { cacheManager, CACHE_KEYS, CACHE_TTL } from '../cache/redis'
 
 export interface GenerateReportRequest {
@@ -12,16 +11,16 @@ export class ReportService {
     const { reportDate, reportType } = request
 
     // 1. 获取原始文章
-    const articles = await this.getRawArticles(reportDate, reportType)
+    const articles = await this.getRawArticles(reportDate)
     if (articles.length === 0) {
       throw new Error('当日无可用文章')
     }
 
     // 2. 生成重点关注
-    const highlights = await this.generateHighlights(articles, reportType)
+    const highlights = await this.generateHighlights(articles)
 
     // 3. 生成洞察
-    const insights = await this.generateInsights(articles, reportType)
+    const insights = await this.generateInsights(articles)
 
     // 4. 按模块分组
     const sections = this.groupByModules(articles)
@@ -89,7 +88,7 @@ export class ReportService {
     return report
   }
 
-  private async getRawArticles(reportDate: string, reportType: string) {
+  private async getRawArticles(reportDate: string) {
     const { data, error } = await supabaseAdmin
       .from('raw_articles')
       .select('*')
@@ -105,9 +104,9 @@ export class ReportService {
     return data || []
   }
 
-  private async generateHighlights(articles: any[], reportType: string) {
+  private async generateHighlights(articles: unknown[]) {
     // 简化版本：取质量分最高的4条
-    return articles
+    return (articles as Array<{ id: string; title: string; summary?: string; source: string; url: string; segment?: string; event_type?: string }>)
       .slice(0, 4)
       .map((article, index) => ({
         id: `highlight-${index}`,
@@ -119,12 +118,8 @@ export class ReportService {
       }))
   }
 
-  private async generateInsights(articles: any[], reportType: string) {
-    const targetAudienceMap: Record<string, string> = {
-      market: '投资人和企业决策者',
-      tech: '技术团队',
-      product: '产品团队',
-    }
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  private async generateInsights(articles: unknown[]) {
 
     // 简化版本：生成3条通用洞察
     return [
@@ -132,7 +127,7 @@ export class ReportService {
         id: 'insight-1',
         title: '行业趋势加速',
         description: '今日动态显示行业正在快速发展，建议密切关注后续进展。',
-        impact: `对${targetAudienceMap[reportType]}具有重要参考价值。`,
+        impact: '对行业决策者具有重要参考价值。',
       },
       {
         id: 'insight-2',
@@ -149,18 +144,18 @@ export class ReportService {
     ]
   }
 
-  private groupByModules(articles: any[]) {
-    const modules: Record<string, any[]> = {}
+  private groupByModules(articles: Array<{ id: string; title: string; summary?: string; source: string; url: string; date: string; segment?: string }>) {
+    const modules: Record<string, Array<{ id: string; title: string; summary: string; source: string; url: string; date: string }>> = {}
 
     articles.forEach((article) => {
-      const module = article.segment || '其他'
-      if (!modules[module]) {
-        modules[module] = []
+      const moduleName = article.segment || '其他'
+      if (!modules[moduleName]) {
+        modules[moduleName] = []
       }
-      modules[module].push({
+      modules[moduleName].push({
         id: article.id,
         title: article.title,
-        summary: article.summary,
+        summary: article.summary || '',
         source: article.source,
         url: article.url,
         date: article.date,
@@ -174,7 +169,17 @@ export class ReportService {
     }))
   }
 
-  private async saveReport(data: any) {
+  private async saveReport(data: {
+    type: string
+    report_date: string
+    title: string
+    summary: string
+    highlights: Array<{ id: string; title: string; summary: string; source: string; url: string; tag?: string }>
+    insights: Array<{ id: string; title: string; description: string; impact: string }>
+    sections: Array<{ id: string; name: string; items: Array<{ id: string; title: string; summary: string; source: string; url: string; date: string }> }>
+    status: string
+    quality_score: number
+  }) {
     const { data: report, error } = await supabaseAdmin
       .from('daily_reports')
       .insert(data)
@@ -197,11 +202,11 @@ export class ReportService {
     return `${titles[type]} - ${date}`
   }
 
-  private generateSummary(articles: any[]) {
+  private generateSummary(articles: unknown[]) {
     return `今日共收录 ${articles.length} 条资讯，涵盖产品发布、技术进展、市场动态等多个维度。`
   }
 
-  private calculateQualityScore(articles: any[]) {
+  private calculateQualityScore(articles: unknown[]) {
     const baseScore = 80
     const articleScore = Math.min(articles.length * 2, 20)
     return baseScore + articleScore

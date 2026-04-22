@@ -67,7 +67,7 @@ export class AskAIService {
     })
 
     // 5. 解析来源
-    const sources = this.extractSources(answer, report)
+    const sources = this.extractSources()
     const relatedItems = await this.findRelatedItems(request.selectedText, report)
 
     // 6. 保存会话
@@ -154,7 +154,11 @@ export class AskAIService {
       return { remaining: 5, total: 5 } // 游客 5 次
     }
 
-    return await cacheManager.getAskAICredits(userId)
+    const credits = await cacheManager.getAskAICredits(userId)
+    return {
+      remaining: credits.remaining,
+      total: 100,
+    }
   }
 
   private async deductCredits(userId?: string): Promise<number> {
@@ -228,7 +232,7 @@ export class AskAIService {
     return answer.slice(0, 200).trim() + '...'
   }
 
-  private extractSources(answer: string, report: any): Array<any> {
+  private extractSources(): Array<{ title: string; url: string; source: string; relevance: number }> {
     // 简化版本：返回模拟来源
     return [
       { title: '官方公告', url: '#', source: '官方', relevance: 0.95 },
@@ -236,10 +240,11 @@ export class AskAIService {
     ]
   }
 
-  private async findRelatedItems(selectedText: string, report: any): Promise<Array<any>> {
+  private async findRelatedItems(selectedText: string, report: unknown): Promise<Array<{ id: string; title: string; summary: string; relevance: number }>> {
     // 简化版本：从日报 sections 中找相关条目
-    const allItems = report.sections?.flatMap((s: any) => s.items || []) || []
-    return allItems.slice(0, 2).map((item: any) => ({
+    const reportTyped = report as { sections?: Array<{ items?: Array<{ id: string; title: string; summary?: string }> }> }
+    const allItems = reportTyped.sections?.flatMap((s) => s.items || []) || []
+    return allItems.slice(0, 2).map((item) => ({
       id: item.id,
       title: item.title,
       summary: item.summary?.slice(0, 100) || '',
@@ -253,8 +258,8 @@ export class AskAIService {
     selectedText: string
     question?: string
     answer: string
-    sources: any[]
-    relatedItems: any[]
+    sources: Array<{ title: string; url: string; source: string; relevance: number }>
+    relatedItems: Array<{ id: string; title: string; summary: string; relevance: number }>
   }): Promise<string> {
     const { data: session, error } = await supabaseAdmin
       .from('ask_ai_sessions')

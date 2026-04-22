@@ -26,9 +26,9 @@ export type Database = {
           report_date: string
           title: string
           summary: string
-          highlights: any[]
-          insights: any[]
-          sections: any[]
+          highlights: unknown[]
+          insights: unknown[]
+          sections: unknown[]
           status: 'draft' | 'published'
           quality_score: number
           published_at: string | null
@@ -51,11 +51,11 @@ export type Database = {
           segment: string | null
           tags: string[] | null
           event_type: string | null
-          entities: any | null
-          raw_data: any | null
+          entities: unknown | null
+          raw_data: unknown | null
           verified: boolean
           quality_score: number | null
-          verification_details: any | null
+          verification_details: unknown | null
           crawled_at: string
           created_at: string
         }
@@ -70,7 +70,7 @@ export type Database = {
           selected_text: string
           user_question: string | null
           ai_response: string
-          sources: any[] | null
+          sources: unknown[] | null
           related_items: string[] | null
           created_at: string
         }

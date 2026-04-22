@@ -100,7 +100,7 @@ export class LLMRouter {
   }
 
   getStatus(): Record<Provider, { available: boolean; failures: number; recentCalls: number }> {
-    const status: Record<string, any> = {}
+    const status: Record<string, unknown> = {}
 
     this.clients.forEach((_, provider) => {
       const failures = this.failureCount.get(provider) ?? 0

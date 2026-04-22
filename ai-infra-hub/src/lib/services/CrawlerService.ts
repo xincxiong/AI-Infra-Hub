@@ -65,7 +65,7 @@ export class CrawlerService {
 
       const data = await response.json()
 
-      return data.results.map((result: any) => ({
+      return data.results.map((result: { url: string; title: string; content: string }) => ({
         url: result.url,
         source: new URL(result.url).hostname,
         date: date || new Date().toISOString().slice(0, 10),
@@ -90,7 +90,7 @@ export class CrawlerService {
       throw new Error('阿里云百炼 API Key 未配置')
     }
 
-    const { query, maxResults = 10, date, segment, region } = options
+    const { query, date, segment, region } = options
 
     try {
       const client = await llmRouter.getClient('summary')
@@ -325,7 +325,7 @@ export class CrawlerService {
   /**
    * 构建日报生成 Prompt
    */
-  private buildReportPrompt(articles: any[], type: string): string {
+  private buildReportPrompt(articles: Array<{ id: string; title: string; summary?: string; source: string }>, type: 'market' | 'tech' | 'product'): string {
     const typeNames = {
       market: '市场动态',
       tech: '技术动态',
@@ -359,7 +359,7 @@ export class CrawlerService {
     type: string,
     date: string,
     content: string,
-    articles: any[]
+    articles: Array<{ id: string; title: string; summary?: string; source: string; url: string; tags?: string[] }>
   ): Promise<void> {
     const lines = content.split('\n')
     const title = lines[0]?.replace(/^[#*\-]\s*/, '').trim() || `${type}日报 - ${date}`

@@ -1,7 +1,7 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import { Calendar, ChevronLeft, ChevronRight, Sparkles, Clock, ExternalLink, Filter } from 'lucide-react';
+import { useState, useEffect, useCallback } from 'react';
+import { Sparkles } from 'lucide-react';
 import { AskAISidebar, TextSelectionToolbar } from '@/components/ask-ai';
 
 interface Report {
@@ -38,8 +38,7 @@ interface Report {
 
 export default function Home() {
   const [reportType, setReportType] = useState<'market' | 'tech' | 'product'>('market');
-  const [selectedDate, setSelectedDate] = useState('2026-04-13');
-  const [selectedFilter, setSelectedFilter] = useState<string>('全部');
+  const [selectedDate] = useState('2026-04-13');
   const [showAskAI, setShowAskAI] = useState(false);
   const [selectedText, setSelectedText] = useState('');
   const [report, setReport] = useState<Report | null>(null);
@@ -51,18 +50,10 @@ export default function Home() {
     product: '产品动态'
   };
 
-  const reportTypeDescriptions = {
-    market: '面向投资人和企业决策者，聚焦融资、产品、合作、政策动态',
-    tech: '面向工程师和研究者，聚焦模型、工程、论文动态',
-    product: '面向产品经理和创业者，聚焦云厂商、模型厂商、芯片厂商、创业公司动态'
-  };
+
 
   // 获取日报数据
-  useEffect(() => {
-    fetchReport();
-  }, [reportType, selectedDate]);
-
-  const fetchReport = async () => {
+  const fetchReport = useCallback(async () => {
     setLoading(true);
     try {
       const response = await fetch(`/api/reports?type=${reportType}&date=${selectedDate}`);
@@ -72,11 +63,15 @@ export default function Home() {
       } else {
         setReport(getMockReport());
       }
-    } catch (error) {
+    } catch {
       setReport(getMockReport());
     }
     setLoading(false);
-  };
+  }, [reportType, selectedDate]);
+
+  useEffect(() => {
+    fetchReport();
+  }, [fetchReport]);
 
   const getMockReport = (): Report => ({
     id: 'demo',
@@ -156,7 +151,7 @@ export default function Home() {
     ]
   });
 
-  const filterOptions = report?.sections.map(s => s.name) || [];
+
 
   const handleAskAIClick = (text: string) => {
     setSelectedText(text);

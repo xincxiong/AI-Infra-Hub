@@ -4,7 +4,7 @@ import { authOptions } from '@/lib/auth'
 import { cacheManager } from '@/lib/cache/redis'
 
 // GET /api/credits - 获取用户剩余额度
-export async function GET(request: NextRequest) {
+export async function GET() {
   try {
     const session = await getServerSession(authOptions)
     
@@ -19,7 +19,7 @@ export async function GET(request: NextRequest) {
       })
     }
 
-    const userId = session.user.id
+    const userId = (session.user as { id: string }).id
     const credits = await cacheManager.getAskAICredits(userId)
 
     return NextResponse.json({

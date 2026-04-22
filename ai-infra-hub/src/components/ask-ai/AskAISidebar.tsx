@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, useCallback } from 'react';
 import { 
   X, Edit2, Copy, MoreHorizontal, ChevronDown, 
   Sparkles, Send, Mic, AtSign, Paperclip, Newspaper, Brain,
@@ -28,8 +28,7 @@ export default function AskAISidebar({
   isOpen, 
   onClose, 
   selectedText, 
-  reportTitle,
-  reportType 
+  reportTitle
 }: AskAISidebarProps) {
   const [messages, setMessages] = useState<Message[]>([]);
   const [inputText, setInputText] = useState('');
@@ -51,9 +50,9 @@ export default function AskAISidebar({
     if (selectedText && isOpen && messages.length === 0) {
       generateSummary();
     }
-  }, [selectedText, isOpen]);
+  }, [selectedText, isOpen, messages.length]);
 
-  const generateSummary = async () => {
+  const generateSummary = useCallback(async () => {
     setIsLoading(true);
     
     try {
@@ -100,7 +99,7 @@ export default function AskAISidebar({
     }
     
     setIsLoading(false);
-  };
+  }, [selectedText, reportTitle]);
 
   const handleSendMessage = async () => {
     if (!inputText.trim() || isLoading) return;
@@ -164,25 +163,7 @@ export default function AskAISidebar({
     setIsLoading(false);
   };
 
-  const generateAIResponse = (question: string): string => {
-    return `关于您的问题「${question}」，我来为您详细解答：
 
-**背景分析：**
-这段内容涉及的是当前 AI 行业的热点话题。从技术发展趋势来看，这代表了行业向更高效、更智能方向演进的重要信号。
-
-**深度解读：**
-1. **技术层面**：这采用了最新的架构优化方案，能够显著提升推理效率
-2. **商业层面**：预计将对现有市场格局产生重要影响，可能催生新的商业模式
-3. **应用层面**：用户可以期待更快的响应速度和更低的成本
-
-**影响评估：**
-• 短期影响：技术团队需要评估适配成本
-• 中期影响：可能改变行业竞争格局
-• 长期影响：推动整个行业向更高效能方向发展
-
-**行动建议：**
-建议您持续关注后续发展，并根据自身业务需求制定相应的技术规划。`;
-  };
 
   const handleQuickAction = (action: string) => {
     const prompts: Record<string, string> = {
@@ -314,7 +295,7 @@ export default function AskAISidebar({
             {selectedText && (
               <div className="bg-blue-50 border border-blue-100 rounded-xl p-3">
                 <p className="text-xs text-gray-500 mb-1.5">当前上下文：</p>
-                <p className="text-sm text-gray-700 line-clamp-3">"{selectedText}"</p>
+                <p className="text-sm text-gray-700 line-clamp-3">&quot;{selectedText}&quot;</p>
               </div>
             )}
 

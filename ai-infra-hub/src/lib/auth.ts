@@ -1,11 +1,10 @@
 import NextAuth, { NextAuthOptions } from 'next-auth'
-import { Provider } from 'next-auth/providers'
 import GoogleProvider from 'next-auth/providers/google'
 import GitHubProvider from 'next-auth/providers/github'
 import CredentialsProvider from 'next-auth/providers/credentials'
 import { supabaseAdmin } from './db/supabase'
 
-const providers: Provider[] = [
+const providers = [
   // Google 登录
   GoogleProvider({
     clientId: process.env.GOOGLE_CLIENT_ID!,
@@ -42,31 +41,29 @@ export const authOptions: NextAuthOptions = {
     maxAge: 30 * 24 * 60 * 60, // 30 天
   },
   callbacks: {
-    async signIn({ user, account, profile }) {
+    async signIn({ user }) {
       // 用户首次登录时，自动创建用户记录
-      if (account?.provider === 'google' || account?.provider === 'github') {
-        try {
-          const { data: existingUser } = await supabaseAdmin
-            .from('users')
-            .select('id')
-            .eq('email', user.email)
-            .single()
+      try {
+        const { data: existingUser } = await supabaseAdmin
+          .from('users')
+          .select('id')
+          .eq('email', user.email)
+          .single()
 
-          if (!existingUser) {
-            await supabaseAdmin.from('users').insert({
-              email: user.email!,
-              name: user.name,
-              avatar_url: user.image,
-              role: 'user',
-            })
-          }
-        } catch (error) {
-          console.error('创建用户失败:', error)
+        if (!existingUser) {
+          await supabaseAdmin.from('users').insert({
+            email: user.email!,
+            name: user.name,
+            avatar_url: user.image,
+            role: 'user',
+          })
         }
+      } catch (error) {
+        console.error('创建用户失败:', error)
       }
       return true
     },
-    async jwt({ token, user, account, profile }) {
+    async jwt({ token, user }) {
       if (user) {
         token.id = user.id
       }
@@ -74,7 +71,7 @@ export const authOptions: NextAuthOptions = {
     },
     async session({ session, token }) {
       if (session.user) {
-        session.user.id = token.id as string
+        (session.user as { id: string }).id = token.id as string
       }
       return session
     },

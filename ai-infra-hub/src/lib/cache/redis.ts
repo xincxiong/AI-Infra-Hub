@@ -69,7 +69,7 @@ export class CacheManager {
   }
 
   // 设置缓存
-  async set(key: string, value: any, ttl: number): Promise<void> {
+  async set(key: string, value: unknown, ttl: number): Promise<void> {
     try {
       await this.redis.setex(key, ttl, value)
     } catch (error) {
@@ -108,7 +108,7 @@ export class CacheManager {
   }
 
   // 缓存预热
-  async warmupReport(date: string, type: string, data: any): Promise<void> {
+  async warmupReport(date: string, type: string, data: unknown): Promise<void> {
     const key = CACHE_KEYS.REPORT(date, type)
     await this.set(key, data, CACHE_TTL.REPORT)
   }
