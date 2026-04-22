@@ -23,7 +23,7 @@ export class ReportService {
     const insights = await this.generateInsights(articles)
 
     // 4. 按模块分组
-    const sections = this.groupByModules(articles)
+    const sections = this.groupByModules(articles, reportType)
 
     // 5. 保存日报
     const report = await this.saveReport({
@@ -145,29 +145,73 @@ export class ReportService {
     ]
   }
 
-  private groupByModules(articles: Array<{ id: string; title: string; summary?: string; source: string; url: string; date: string; segment?: string }>) {
-    const modules: Record<string, Array<{ id: string; title: string; summary: string; source: string; url: string; date: string }>> = {}
+  private groupByModules(articles: Array<{ id: string; title: string; summary?: string; source: string; url: string; date: string; segment?: string; event_type?: string }>, reportType: string) {
+    // 根据报告类型定义更细的分类
+    const categoryConfig: Record<string, string[]> = {
+      market: ['融资', '产品', '合作', '政策'],
+      tech: ['模型', '工程', '论文'],
+      product: ['云厂商', '模型厂商', '芯片厂商', '创业公司']
+    };
+
+    const categories = categoryConfig[reportType] || ['其他'];
+    const modules: Record<string, Array<{ id: string; title: string; summary: string; source: string; url: string; date: string }>> = {};
+
+    // 初始化所有分类
+    categories.forEach(cat => {
+      modules[cat] = [];
+    });
 
     articles.forEach((article) => {
-      const moduleName = article.segment || '其他'
-      if (!modules[moduleName]) {
-        modules[moduleName] = []
+      // 根据 event_type 或 segment 智能分类
+      let category = '其他';
+      
+      // 尝试从 event_type 推断
+      if (article.event_type) {
+        if (article.event_type === 'funding') category = '融资';
+        else if (article.event_type === 'product_launch') category = '产品';
+        else if (article.event_type === 'partnership') category = '合作';
+        else if (article.event_type === 'research') category = '论文';
       }
-      modules[moduleName].push({
+      
+      // 如果 event_type 没有匹配，使用 segment
+      if (category === '其他' && article.segment) {
+        const segment = article.segment.toLowerCase();
+        if (segment.includes('market') || segment.includes('business')) category = '产品';
+        else if (segment.includes('technology') || segment.includes('tech')) category = '模型';
+        else if (segment.includes('research')) category = '论文';
+        else if (segment.includes('product') || segment.includes('release')) category = '产品';
+        else if (segment.includes('cloud')) category = '云厂商';
+        else if (segment.includes('chip') || segment.includes('hardware')) category = '芯片厂商';
+        else if (segment.includes('startup')) category = '创业公司';
+      }
+
+      // 如果还是不匹配，归入"其他"
+      if (category === '其他' || !categories.includes(category)) {
+        category = '其他';
+      }
+
+      if (!modules[category]) {
+        modules[category] = [];
+      }
+      
+      modules[category].push({
         id: article.id,
         title: article.title,
         summary: article.summary || '',
         source: article.source,
         url: article.url,
         date: article.date,
-      })
-    })
+      });
+    });
 
-    return Object.entries(modules).map(([name, items]) => ({
-      id: `section-${name}`,
-      name,
-      items,
-    }))
+    // 只返回有内容的分类
+    return Object.entries(modules)
+      .filter(([_, items]) => items.length > 0)
+      .map(([name, items]) => ({
+        id: `section-${name}`,
+        name,
+        items,
+      }));
   }
 
   private async saveReport(data: {

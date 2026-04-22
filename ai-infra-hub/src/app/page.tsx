@@ -88,84 +88,98 @@ export default function Home() {
     fetchReport();
   }, [fetchReport]);
 
-  const getMockReport = (): Report => ({
-    id: 'demo',
-    type: reportType,
-    title: `${reportTypeNames[reportType]} - ${selectedDate}`,
-    summary: `今日共收录 15 条${reportTypeNames[reportType]}资讯。`,
-    publishedAt: new Date().toISOString(),
-    highlights: [
-      {
-        id: '1',
-        title: 'OpenAI 发布 GPT-4 Turbo 新版本',
-        summary: '推理速度提升 50%，成本降低 30%。',
-        source: 'OpenAI Blog',
-        url: '#',
-        tag: '产品发布'
-      },
-      {
-        id: '2',
-        title: 'NVIDIA 推出新一代 AI 芯片',
-        summary: 'H200 芯片内存容量翻倍。',
-        source: 'NVIDIA News',
-        url: '#',
-        tag: '硬件更新'
-      },
-      {
-        id: '3',
-        title: 'Anthropic 获得 20 亿美元融资',
-        summary: '估值达到 600 亿美元。',
-        source: 'TechCrunch',
-        url: '#',
-        tag: '融资动态'
-      },
-      {
-        id: '4',
-        title: 'Google DeepMind 发布新论文',
-        summary: '训练效率提升 40%。',
-        source: 'arXiv',
-        url: '#',
-        tag: '技术论文'
-      }
-    ],
-    insights: [
-      {
-        id: '1',
-        title: '大模型竞争进入新阶段',
-        description: '各大厂商持续加大投入。',
-        impact: '建议关注技术发展趋势。'
-      },
-      {
-        id: '2',
-        title: 'AI 基础设施需求激增',
-        description: '算力和存储需求持续增长。',
-        impact: '云服务商迎来发展机遇。'
-      },
-      {
-        id: '3',
-        title: '投资热度持续高涨',
-        description: 'AI 领域融资活跃。',
-        impact: '行业整合加速。'
-      }
-    ],
-    sections: [
-      {
-        id: 'section-1',
-        name: '大模型动态',
+  const getMockReport = (): Report => {
+    // 根据报告类型生成不同的分类
+    const sectionConfig: Record<'market' | 'tech' | 'product', string[]> = {
+      market: ['融资', '产品', '合作', '政策'],
+      tech: ['模型', '工程', '论文'],
+      product: ['云厂商', '模型厂商', '芯片厂商', '创业公司']
+    };
+
+    const currentSections = sectionConfig[reportType];
+
+    return {
+      id: 'demo',
+      type: reportType,
+      title: `${reportTypeNames[reportType]} - ${selectedDate}`,
+      summary: `今日共收录 15 条${reportTypeNames[reportType]}资讯。`,
+      publishedAt: new Date().toISOString(),
+      highlights: [
+        {
+          id: '1',
+          title: 'OpenAI 发布 GPT-4 Turbo 新版本',
+          summary: '推理速度提升 50%，成本降低 30%。',
+          source: 'OpenAI Blog',
+          url: '#',
+          tag: '产品发布'
+        },
+        {
+          id: '2',
+          title: 'NVIDIA 推出新一代 AI 芯片',
+          summary: 'H200 芯片内存容量翻倍。',
+          source: 'NVIDIA News',
+          url: '#',
+          tag: '硬件更新'
+        },
+        {
+          id: '3',
+          title: 'Anthropic 获得 20 亿美元融资',
+          summary: '估值达到 600 亿美元。',
+          source: 'TechCrunch',
+          url: '#',
+          tag: '融资动态'
+        },
+        {
+          id: '4',
+          title: 'Google DeepMind 发布新论文',
+          summary: '训练效率提升 40%。',
+          source: 'arXiv',
+          url: '#',
+          tag: '技术论文'
+        }
+      ],
+      insights: [
+        {
+          id: '1',
+          title: '大模型竞争进入新阶段',
+          description: '各大厂商持续加大投入。',
+          impact: '建议关注技术发展趋势。'
+        },
+        {
+          id: '2',
+          title: 'AI 基础设施需求激增',
+          description: '算力和存储需求持续增长。',
+          impact: '云服务商迎来发展机遇。'
+        },
+        {
+          id: '3',
+          title: '投资热度持续高涨',
+          description: 'AI 领域融资活跃。',
+          impact: '行业整合加速。'
+        }
+      ],
+      sections: currentSections.map(sectionName => ({
+        id: `section-${sectionName}`,
+        name: sectionName,
         items: [
-          { id: 'item-1', title: 'GPT-4 Turbo 更新', summary: '性能提升', source: 'OpenAI', url: '#' },
-          { id: 'item-2', title: 'Claude 3.5 发布', summary: '代码能力增强', source: 'Anthropic', url: '#' }
+          { 
+            id: `item-${sectionName}-1`, 
+            title: `${sectionName}动态示例 1`, 
+            summary: `这是关于${sectionName}的具体资讯内容...`, 
+            source: '权威媒体', 
+            url: '#' 
+          },
+          { 
+            id: `item-${sectionName}-2`, 
+            title: `${sectionName}动态示例 2`, 
+            summary: `这是关于${sectionName}的另一条资讯...`, 
+            source: '行业媒体', 
+            url: '#' 
+          }
         ]
-      },
-      {
-        id: 'section-2',
-        name: '硬件更新',
-        items: [
-          { id: 'item-3', title: 'NVIDIA H200', summary: '内存翻倍', source: 'NVIDIA', url: '#' }
-        ]
-      }
-    ]
-  });
+      }));
+    };
+  };
 
   const filterOptions = report?.sections.map(s => s.name) || [];
 
