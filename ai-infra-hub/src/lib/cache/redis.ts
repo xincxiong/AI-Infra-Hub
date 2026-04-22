@@ -1,13 +1,12 @@
 import { Redis } from '@upstash/redis'
 
-const redisUrl = process.env.UPSTASH_REDIS_REST_URL!
-const redisToken = process.env.UPSTASH_REDIS_REST_TOKEN!
+const redisUrl = process.env.UPSTASH_REDIS_REST_URL || ''
+const redisToken = process.env.UPSTASH_REDIS_REST_TOKEN || ''
 
-// Redis 客户端实例
-export const redis = new Redis({
-  url: redisUrl,
-  token: redisToken,
-})
+// Redis 客户端实例（如果环境变量缺失，使用 null 对象模式）
+export const redis = redisUrl && redisToken
+  ? new Redis({ url: redisUrl, token: redisToken })
+  : null
 
 // 缓存键前缀
 export const CACHE_KEYS = {
