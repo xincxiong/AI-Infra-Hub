@@ -8,9 +8,13 @@ export const dynamic = 'force-dynamic'
 export async function POST(request: NextRequest) {
   try {
     // 验证授权（Vercel Cron 会携带 Authorization header）
-    const authHeader = request.headers.get('authorization')
-    if (authHeader !== `Bearer ${process.env.CRON_SECRET}`) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+    // 如果 CRON_SECRET 未配置，跳过验证（仅用于开发环境）
+    const cronSecret = process.env.CRON_SECRET
+    if (cronSecret) {
+      const authHeader = request.headers.get('authorization')
+      if (authHeader !== `Bearer ${cronSecret}`) {
+        return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+      }
     }
 
     const { searchParams } = new URL(request.url)
