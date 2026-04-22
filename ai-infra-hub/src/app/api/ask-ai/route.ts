@@ -1,6 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { askAIService } from '@/lib/services/AskAIService'
 
+// 强制使用动态渲染
+export const dynamic = 'force-dynamic'
+
 // POST /api/ask-ai - 标准问答
 export async function POST(request: NextRequest) {
   try {

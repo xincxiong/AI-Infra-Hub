@@ -3,6 +3,9 @@ import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
 import { supabaseAdmin } from '@/lib/db/supabase'
 
+// 强制使用动态渲染
+export const dynamic = 'force-dynamic'
+
 // GET /api/users/stats - 获取用户统计信息
 export async function GET() {
   try {

@@ -3,6 +3,9 @@ import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
 import { cacheManager } from '@/lib/cache/redis'
 
+// 强制使用动态渲染
+export const dynamic = 'force-dynamic'
+
 // GET /api/credits - 获取用户剩余额度
 export async function GET() {
   try {

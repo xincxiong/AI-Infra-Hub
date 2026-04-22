@@ -1,6 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { crawlerService } from '@/lib/services/CrawlerService'
 
+// 强制使用动态渲染
+export const dynamic = 'force-dynamic'
+
 // 每日定时任务：采集数据并生成日报
 export async function POST(request: NextRequest) {
   try {

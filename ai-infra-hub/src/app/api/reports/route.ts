@@ -1,6 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { reportService } from '@/lib/services/ReportService'
 
+// 强制使用动态渲染
+export const dynamic = 'force-dynamic'
+
 // GET /api/reports - 获取日报列表
 export async function GET(request: NextRequest) {
   try {
