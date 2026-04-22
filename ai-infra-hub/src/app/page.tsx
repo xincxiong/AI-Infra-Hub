@@ -38,7 +38,14 @@ interface Report {
 
 export default function Home() {
   const [reportType, setReportType] = useState<'market' | 'tech' | 'product'>('market');
-  const [selectedDate] = useState('2026-04-13');
+  const [selectedDate] = useState(() => {
+    // 默认选择今天的日期
+    const today = new Date();
+    const year = today.getFullYear();
+    const month = String(today.getMonth() + 1).padStart(2, '0');
+    const day = String(today.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  });
   const [showAskAI, setShowAskAI] = useState(false);
   const [selectedText, setSelectedText] = useState('');
   const [report, setReport] = useState<Report | null>(null);
