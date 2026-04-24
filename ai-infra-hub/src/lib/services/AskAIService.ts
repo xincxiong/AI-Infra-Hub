@@ -69,7 +69,7 @@ export class AskAIService {
     })
 
     // 5. 解析来源
-    const sources = this.extractSources()
+    const sources = this.extractSources(report)
     const relatedItems = await this.findRelatedItems(request.selectedText, report)
 
     // 6. 保存会话
@@ -236,24 +236,43 @@ export class AskAIService {
     return answer.slice(0, 200).trim() + '...'
   }
 
-  private extractSources(): Array<{ title: string; url: string; source: string; relevance: number }> {
-    // 简化版本：返回模拟来源
+  private extractSources(report: unknown): Array<{ title: string; url: string; source: string; relevance: number }> {
+    const reportTyped = report as { highlights?: Array<{ title?: string; url?: string; source?: string }> }
+    
+    if (reportTyped.highlights && reportTyped.highlights.length > 0) {
+      return reportTyped.highlights.slice(0, 3).map((highlight, index) => ({
+        title: highlight.title || '未知来源',
+        url: highlight.url || '#',
+        source: highlight.source || '官方',
+        relevance: 0.95 - index * 0.1,
+      }))
+    }
+    
     return [
-      { title: '官方公告', url: '#', source: '官方', relevance: 0.95 },
-      { title: '行业分析', url: '#', source: '媒体', relevance: 0.85 },
+      { title: '日报数据源', url: '#', source: '官方', relevance: 0.95 },
     ]
   }
 
   private async findRelatedItems(selectedText: string, report: unknown): Promise<Array<{ id: string; title: string; summary: string; relevance: number }>> {
-    // 简化版本：从日报 sections 中找相关条目
     const reportTyped = report as { sections?: Array<{ items?: Array<{ id: string; title: string; summary?: string }> }> }
     const allItems = reportTyped.sections?.flatMap((s) => s.items || []) || []
-    return allItems.slice(0, 2).map((item) => ({
-      id: item.id,
-      title: item.title,
-      summary: item.summary?.slice(0, 100) || '',
-      relevance: 0.8,
-    }))
+    const lowerText = selectedText.toLowerCase()
+    
+    // 基于关键词匹配的相关性排序（简单实现）
+    const scored = allItems.map((item) => {
+      const text = `${item.title} ${item.summary || ''}`.toLowerCase()
+      const matchWords = lowerText.split(/\s+/).filter(w => w.length > 3)
+      const matches = matchWords.filter(w => text.includes(w)).length
+      const relevance = matches > 0 ? 0.5 + (matches / matchWords.length) * 0.5 : 0.1
+      return {
+        id: item.id,
+        title: item.title,
+        summary: item.summary?.slice(0, 100) || '',
+        relevance,
+      }
+    })
+    
+    return scored.sort((a, b) => b.relevance - a.relevance).slice(0, 3)
   }
 
   private async saveSession(data: {

@@ -119,28 +119,52 @@ export class ReportService {
       }))
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   private async generateInsights(articles: unknown[]) {
-
-    // 简化版本：生成3条通用洞察
+    const articlesTyped = articles as Array<{ title: string; summary?: string; segment?: string; event_type?: string }>
+    
+    // 基于实际文章数据生成洞察
+    const topics = new Set<string>()
+    const events = new Set<string>()
+    
+    articlesTyped.forEach(article => {
+      if (article.segment) topics.add(article.segment)
+      if (article.event_type) events.add(article.event_type)
+    })
+    
+    const hasFunding = events.has('funding')
+    const hasLaunch = events.has('product_launch')
+    const hasResearch = events.has('research')
+    
     return [
       {
         id: 'insight-1',
-        title: '行业趋势加速',
-        description: '今日动态显示行业正在快速发展，建议密切关注后续进展。',
-        impact: '对行业决策者具有重要参考价值。',
+        title: hasFunding ? '融资热度持续' : '行业趋势加速',
+        description: hasFunding 
+          ? '今日数据显示 AI 领域投融资活跃，资本正在加速布局。'
+          : '今日动态显示行业正在快速发展，建议密切关注后续进展。',
+        impact: hasFunding
+          ? '建议关注头部项目的融资方向和估值变化。'
+          : '对行业决策者具有重要参考价值。',
       },
       {
         id: 'insight-2',
-        title: '技术竞争加剧',
-        description: '主要厂商持续推出新产品，市场竞争日趋激烈。',
-        impact: '建议评估自身产品的差异化优势。',
+        title: hasLaunch ? '产品竞争加剧' : '技术竞争加剧',
+        description: hasLaunch
+          ? '多家厂商在同一时期发布新产品，市场竞争白热化。'
+          : '主要厂商持续推出新产品，市场竞争日趋激烈。',
+        impact: hasFunding
+          ? '建议评估自身产品的差异化优势和市场定位。'
+          : '建议评估自身产品的差异化优势。',
       },
       {
         id: 'insight-3',
-        title: '投资机会显现',
-        description: '新兴技术和产品方向值得关注，可能存在投资机会。',
-        impact: '建议深入研究相关领域。',
+        title: hasResearch ? '学术研究活跃' : '投资机会显现',
+        description: hasResearch
+          ? '今日多篇学术论文发表，技术前沿不断推进。'
+          : '新兴技术和产品方向值得关注，可能存在投资机会。',
+        impact: hasResearch
+          ? '建议关注学术界与工业界的交叉趋势。'
+          : '建议深入研究相关领域。',
       },
     ]
   }
@@ -206,7 +230,7 @@ export class ReportService {
 
     // 只返回有内容的分类
     return Object.entries(modules)
-      .filter(([_, items]) => items.length > 0)
+      .filter(([, items]) => items.length > 0)
       .map(([name, items]) => ({
         id: `section-${name}`,
         name,

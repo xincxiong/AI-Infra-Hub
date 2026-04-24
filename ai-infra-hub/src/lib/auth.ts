@@ -1,8 +1,6 @@
 import NextAuth, { NextAuthOptions } from 'next-auth'
 import GoogleProvider from 'next-auth/providers/google'
 import GitHubProvider from 'next-auth/providers/github'
-import CredentialsProvider from 'next-auth/providers/credentials'
-import { supabaseAdmin } from './db/supabase'
 
 const providers = [
   // Google 登录
@@ -14,23 +12,6 @@ const providers = [
   GitHubProvider({
     clientId: process.env.GITHUB_CLIENT_ID!,
     clientSecret: process.env.GITHUB_CLIENT_SECRET!,
-  }),
-  // 邮箱密码登录（可选）
-  CredentialsProvider({
-    name: 'credentials',
-    credentials: {
-      email: { label: 'Email', type: 'email' },
-      password: { label: 'Password', type: 'password' },
-    },
-    async authorize(credentials) {
-      if (!credentials?.email || !credentials?.password) {
-        return null
-      }
-
-      // 这里可以实现自定义的用户验证逻辑
-      // 目前返回 null，表示不支持密码登录
-      return null
-    },
   }),
 ]
 
@@ -47,8 +28,12 @@ export const authOptions: NextAuthOptions = {
         return true
       }
       
+      // 懒加载 Supabase Admin，避免构建时初始化
+      const { supabaseAdmin } = await import('./db/supabase')
+      
       try {
-        const { data: existingUser } = await supabaseAdmin
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const { data: existingUser } = await (supabaseAdmin as any)
           .from('users')
           .select('id')
           .eq('email', user.email)
@@ -80,11 +65,6 @@ export const authOptions: NextAuthOptions = {
       }
       return session
     },
-  },
-  pages: {
-    signIn: '/auth/signin',
-    signOut: '/auth/signout',
-    error: '/auth/error',
   },
   secret: process.env.NEXTAUTH_SECRET,
 }

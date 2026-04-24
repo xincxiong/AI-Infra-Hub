@@ -52,10 +52,22 @@ export async function POST(request: NextRequest) {
 
     const { userId } = await request.json()
 
-    // TODO: 检查管理员权限
-    // if (!isAdmin(session.user)) {
-    //   return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
-    // }
+    // 检查管理员权限：必须是 admin 角色
+    const { supabaseAdmin } = await import('@/lib/db/supabase')
+    const currentUserEmail = (session.user as { email?: string }).email
+    if (!currentUserEmail) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+    }
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const { data: currentUser } = await (supabaseAdmin as any)
+      .from('users')
+      .select('role')
+      .eq('email', currentUserEmail)
+      .single()
+
+    if (!currentUser || (currentUser as { role: string }).role !== 'admin') {
+      return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
+    }
 
     const today = new Date().toISOString().slice(0, 10)
     const key = `credits:${userId}:${today}`

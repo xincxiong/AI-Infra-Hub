@@ -35,23 +35,32 @@ export interface GenerateOptions {
 }
 
 export class LLMClient {
-  private client: OpenAI
+  private client: OpenAI | null = null
   private provider: Provider
   private model: string
+  private config: LLMConfig
 
   constructor(provider: Provider = 'aliyun') {
     this.provider = provider
-    const config = LLM_CONFIGS[provider]
-    this.model = config.defaultModel
+    this.config = LLM_CONFIGS[provider]
+    this.model = this.config.defaultModel
+  }
 
-    this.client = new OpenAI({
-      apiKey: config.apiKey,
-      baseURL: config.baseURL,
-    })
+  private getClient(): OpenAI {
+    if (!this.client) {
+      if (!this.config.apiKey) {
+        throw new Error(`Missing API key for provider: ${this.provider}`)
+      }
+      this.client = new OpenAI({
+        apiKey: this.config.apiKey,
+        baseURL: this.config.baseURL,
+      })
+    }
+    return this.client
   }
 
   async generate(options: GenerateOptions): Promise<string> {
-    const response = await this.client.chat.completions.create({
+    const response = await this.getClient().chat.completions.create({
       model: this.model,
       messages: [
         ...(options.systemPrompt
@@ -68,7 +77,7 @@ export class LLMClient {
   }
 
   async *generateStream(options: { prompt: string; systemPrompt?: string; temperature?: number }): AsyncGenerator<string> {
-    const stream = await this.client.chat.completions.create({
+    const stream = await this.getClient().chat.completions.create({
       model: this.model,
       messages: [
         ...(options.systemPrompt

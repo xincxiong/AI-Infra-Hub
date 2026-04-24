@@ -16,11 +16,10 @@ export function getRedis() {
 }
 
 // 向后兼容的导出（仅在运行时使用）
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const redis = new Proxy({} as any, {
-  get: (_: any, prop: string) => {
+export const redis = new Proxy({} as Redis, {
+  get: (target: Redis, prop: string) => {
     const client = getRedis()
-    return (client as any)[prop]
+    return (client as never)[prop]
   },
 })
 
