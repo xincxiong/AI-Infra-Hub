@@ -350,17 +350,29 @@ curl https://your-app.vercel.app/api/credits
   "crons": [
     {
       "path": "/api/cron/daily-report?type=all",
-      "schedule": "0 3 * * *"
+      "schedule": "0 8 * * *"
     }
   ]
 }
 ```
 
-**执行时间：** 每日凌晨 3:00 UTC（北京时间 11:00 AM）
+**执行时间：** 每日早上 8:00 UTC（北京时间 16:00）
 
-如需调整为北京时间凌晨 3 点，修改为：
+如需调整为北京时间早上 8 点，修改为：
 ```json
-"schedule": "0 19 * * *"
+"schedule": "0 0 * * *"
+```
+
+### CI/CD 自动部署
+
+项目已配置 GitHub Actions CI/CD (`.github/workflows/ci.yml`)：
+- 每次 push 到 main/develop 分支会自动触发
+- 执行 TypeScript 检查、Lint、测试、构建
+- 构建成功后自动部署到 Vercel
+
+手动触发部署：
+```bash
+git push origin main
 ```
 
 ### 手动触发测试
@@ -509,6 +521,7 @@ Error: Missing environment variable: ALIYUN_BAILIAN_API_KEY
 - [ ] Upstash Redis 已创建
 - [ ] 阿里云百炼 API Key 已获取
 - [ ] 所有环境变量已配置
+- [ ] 本地测试通过 (`npm run test` 应显示 28 个测试通过)
 - [ ] 代码已推送到 GitHub
 - [ ] Vercel 项目已创建并部署
 
@@ -521,6 +534,28 @@ Error: Missing environment variable: ALIYUN_BAILIAN_API_KEY
 
 ---
 
-**文档版本**: v2.0  
-**最后更新**: 2026-04-22  
+## 本地开发
+
+### 运行测试
+
+```bash
+# 运行所有测试
+npm run test
+
+# 监听模式运行测试
+npm run test:watch
+```
+
+### 本地启动开发服务器
+
+```bash
+npm run dev
+```
+
+访问 http://localhost:3000
+
+---
+
+**文档版本**: v2.1  
+**最后更新**: 2026-04-25  
 **维护者**: AI Infra Hub Team
