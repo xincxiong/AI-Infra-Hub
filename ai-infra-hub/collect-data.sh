@@ -2,9 +2,10 @@
 
 # 数据采集脚本
 # 用法：./collect-data.sh [日期]
+# 注意：请在执行前设置 CRON_SECRET 环境变量
 
-CRON_SECRET="tjASbRVzmc46IQaySLXqdratvPng6ewclf47wFl+DE8="
-BASE_URL="http://localhost:3000"
+CRON_SECRET="${CRON_SECRET:-your-cron-secret}"
+BASE_URL="${BASE_URL:-http://localhost:3000}"
 
 # 如果没有指定日期，使用今天
 if [ -z "$1" ]; then

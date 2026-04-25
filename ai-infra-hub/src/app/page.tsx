@@ -1,8 +1,9 @@
 'use client';
 
 import { useState, useEffect, useCallback } from 'react';
-import { Calendar, ChevronLeft, ChevronRight, Sparkles, Clock, ExternalLink, Filter } from 'lucide-react';
+import { Calendar, ChevronLeft, ChevronRight, Sparkles, Clock, ExternalLink, Filter, Search, Heart } from 'lucide-react';
 import { AskAISidebar, TextSelectionToolbar } from '@/components/ask-ai';
+import FavoriteButton from '@/components/FavoriteButton';
 
 interface Report {
   id: string;
@@ -219,23 +220,44 @@ export default function Home() {
                 <p className="text-sm text-gray-500">AI 行业专业日报</p>
               </div>
             </div>
-            <div className="flex items-center gap-1 bg-gray-100/80 rounded-xl p-1">
-              {(['market', 'tech', 'product'] as const).map((type) => (
-                <button
-                  key={type}
-                  onClick={() => {
-                    setReportType(type);
-                    setSelectedDate(new Date().toISOString().slice(0, 10));
-                  }}
-                  className={`px-5 py-2.5 rounded-lg text-sm font-medium transition-all ${
-                    reportType === type
-                      ? 'bg-white text-gray-900 shadow-sm'
-                      : 'text-gray-600 hover:text-gray-900'
-                  }`}
+            <div className="flex items-center gap-4">
+              {/* 搜索和收藏按钮 */}
+              <div className="flex items-center gap-2">
+                <a
+                  href="/search"
+                  className="p-2.5 rounded-xl bg-white text-gray-600 hover:text-gray-900 hover:bg-gray-50 transition-all shadow-sm"
+                  title="搜索"
                 >
-                  {reportTypeNames[type]}
-                </button>
-              ))}
+                  <Search className="w-5 h-5" />
+                </a>
+                <a
+                  href="/favorites"
+                  className="p-2.5 rounded-xl bg-white text-gray-600 hover:text-gray-900 hover:bg-gray-50 transition-all shadow-sm"
+                  title="收藏"
+                >
+                  <Heart className="w-5 h-5" />
+                </a>
+              </div>
+              
+              {/* 日报类型切换 */}
+              <div className="flex items-center gap-1 bg-gray-100/80 rounded-xl p-1">
+                {(['market', 'tech', 'product'] as const).map((type) => (
+                  <button
+                    key={type}
+                    onClick={() => {
+                      setReportType(type);
+                      setSelectedDate(new Date().toISOString().slice(0, 10));
+                    }}
+                    className={`px-5 py-2.5 rounded-lg text-sm font-medium transition-all ${
+                      reportType === type
+                        ? 'bg-white text-gray-900 shadow-sm'
+                        : 'text-gray-600 hover:text-gray-900'
+                    }`}
+                  >
+                    {reportTypeNames[type]}
+                  </button>
+                ))}
+              </div>
             </div>
           </div>
         </div>
@@ -373,15 +395,18 @@ export default function Home() {
                         <div className="flex items-center gap-2">
                           <span className="px-3 py-1 bg-gray-100 text-gray-700 rounded-lg font-medium">{item.source}</span>
                         </div>
-                        <a
-                          href={item.url}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="flex items-center gap-1.5 text-blue-600 hover:text-blue-700 transition-colors font-medium"
-                        >
-                          查看原文
-                          <ExternalLink className="w-4 h-4" />
-                        </a>
+                        <div className="flex items-center gap-2">
+                          <FavoriteButton articleId={item.id} />
+                          <a
+                            href={item.url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="flex items-center gap-1.5 text-blue-600 hover:text-blue-700 transition-colors font-medium"
+                          >
+                            查看原文
+                            <ExternalLink className="w-4 h-4" />
+                          </a>
+                        </div>
                       </div>
                     </div>
                   ))}

@@ -164,6 +164,43 @@ export type Database = {
         }
         Update: Partial<Record<keyof Database['public']['Tables']['users']['Row'], unknown>>
       }
+      user_favorites: {
+        Row: {
+          id: string
+          user_id: string
+          article_id: string
+          created_at: string
+        }
+        Insert: {
+          user_id: string
+          article_id: string
+        }
+        Update: Partial<Record<keyof Database['public']['Tables']['user_favorites']['Row'], unknown>>
+      }
+      search_keywords: {
+        Row: {
+          id: string
+          keyword: string
+          category: string
+          priority: number
+          target_types: string[]
+          source_preference: string
+          search_interval: number
+          is_active: boolean
+          last_searched_at: string | null
+          created_at: string
+        }
+        Insert: {
+          keyword: string
+          category: string
+          priority?: number
+          target_types?: string[]
+          source_preference?: string
+          search_interval?: number
+          is_active?: boolean
+        }
+        Update: Partial<Record<keyof Database['public']['Tables']['search_keywords']['Row'], unknown>>
+      }
     }
   }
 }
